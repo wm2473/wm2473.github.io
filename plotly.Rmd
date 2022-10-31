@@ -64,17 +64,22 @@ nyc = nyc_inspections %>%
   filter(score %in% 20:100) %>% 
   drop_na(grade)
 ```
-#Scatter plot
+#Scatter plot: Score of resteraurants in Manhattan
 ```{r}
 nyc %>% 
   filter(boro == "Manhattan") %>% 
   plot_ly(x= ~latitude, y=~longitude, color = ~score, type = "scatter", mode ="markers", alpha = .5, text = ~score)
 ```
-#box plot
+#box plot: Different locations restaurants score
 ```{r}
 nyc %>% 
-  mutate(cuisine_description == "American",street = fct_reorder(boro, score)) %>% 
+  mutate(street = fct_reorder(boro, score)) %>% 
   plot_ly(x=~boro, y= ~score, color = ~street, type= "box", colors= "viridis")
+```
+
+```{r}
+nyc %>% 
+  mutate()
 ```
 
 
@@ -110,7 +115,18 @@ nyc_airbnb %>%
 
 Can we make a bar plot?
 ```{r}
-
+nyc_airbnb %>% 
+  count(neighbourhood) %>% 
+  mutate(neighbourhood = fct_reorder(neighbourhood, n)) %>% 
+  plot_ly(x=~neighbourhood, y=~n, type="bar")
 ```
 
+##ggplotly..
+```{r}
+ggp_scatterplot=
+nyc_airbnb %>% 
+  ggplot(aes(x=lat,y =long, color =price))+geom_point()
+
+ggplotly(ggp_scatterplot)
+```
 
