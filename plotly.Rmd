@@ -60,14 +60,21 @@ nyc_inspections =
 
 ```{r}
 nyc = nyc_inspections %>% 
-  select(score,boro,camis, grade, latitude, longitude) %>% 
-  filter(boro == "Manhattan", score %in% 20:100) %>% 
+  select(score,boro,camis, grade, latitude, longitude,street, cuisine_description) %>% 
+  filter(score %in% 20:100) %>% 
   drop_na(grade)
 ```
-
+#Scatter plot
 ```{r}
 nyc %>% 
+  filter(boro == "Manhattan") %>% 
   plot_ly(x= ~latitude, y=~longitude, color = ~score, type = "scatter", mode ="markers", alpha = .5, text = ~score)
+```
+#box plot
+```{r}
+nyc %>% 
+  mutate(cuisine_description == "American",street = fct_reorder(boro, score)) %>% 
+  plot_ly(x=~boro, y= ~score, color = ~street, type= "box", colors= "viridis")
 ```
 
 
