@@ -13,10 +13,10 @@ output:
 
 Here's some text. I like the internet. I use [google](https://www.google.com/) all the time to do data science. 
 
-This is my cat candy, who likes to be on the internet. ![](images/cat.jpg)
+This is my cat candy, who likes to be on the internet. ![](image/cat.jpg)
 
 <center>
-<img src="images/cat.jpg" style="width:25%">
+<img src="image/cat.jpg" style="width:25%">
 </center>
 
 ```{r}
