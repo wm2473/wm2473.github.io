@@ -56,7 +56,7 @@ nyc_inspections =
 ```{r, include=FALSE}
 nyc = nyc_inspections %>% 
   select(score,boro,camis, grade, latitude, longitude,street, cuisine_description) %>% 
-  filter(score %in% 20:100) %>% 
+  filter(score %in% 20:100, latitude >0) %>% 
   drop_na(grade)
 ```
 Column {data-width=650}
