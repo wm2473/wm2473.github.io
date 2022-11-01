@@ -65,12 +65,13 @@ Column {data-width=650}
 ### The restaurant scores in Manhattan area
 
 ```{r}
-nyc %>% 
-  filter(boro == "Manhattan") %>% 
-  plot_ly(x= ~latitude, y=~longitude, color = ~score, type = "scatter", mode ="markers", alpha = .5, text = ~score) %>% 
-    layout((title = "The restaurant scores in Manhattan area"),
-          xaxis = list(title = "latitude"),
-          yaxis = list(title = "longitude"))
+nyc %>%
+  filter(boro == "Manhattan") %>%
+  plot_ly(x = ~ latitude,y =  ~ longitude,color = ~ score,type = "scatter",
+mode = "markers", alpha = .5,text = ~ score) %>%
+  layout((title = "The restaurant scores in Manhattan area"),
+         xaxis = list(title = "latitude"),
+         yaxis = list(title = "longitude"))
 ```
 
 Column {data-width=350}
