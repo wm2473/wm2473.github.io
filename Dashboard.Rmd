@@ -62,31 +62,40 @@ nyc = nyc_inspections %>%
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### The restaurant scores in Manhattan area
 
 ```{r}
 nyc %>% 
   filter(boro == "Manhattan") %>% 
-  plot_ly(x= ~latitude, y=~longitude, color = ~score, type = "scatter", mode ="markers", alpha = .5, text = ~score)
+  plot_ly(x= ~latitude, y=~longitude, color = ~score, type = "scatter", mode ="markers", alpha = .5, text = ~score) %>% 
+    layout((title = "The restaurant scores in Manhattan area"),
+          xaxis = list(title = "latitude"),
+          yaxis = list(title = "longitude"))
 ```
 
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Restaurant scores in different areas 
 
 ```{r}
 nyc %>% 
   mutate(street = fct_reorder(boro, score)) %>% 
-  plot_ly(x=~boro, y= ~score, color = ~street, type= "box", colors= "viridis")
+  plot_ly(x=~boro, y= ~score, color = ~street, type= "box", colors= "viridis") %>% 
+  layout((title = "Restaurant scores in different areas"),
+          xaxis = list(title = "Borough"),
+          yaxis = list(title = "Restaurant scores"))
 ```
 
-### Chart C
+### Score ranking of different cuisine 
 
 ```{r}
 nyc %>% 
   count(cuisine_description) %>% 
   mutate(cuisine_description = fct_reorder(cuisine_description, n)) %>% 
-  plot_ly(x=~cuisine_description, y=~n, type="bar")
+  plot_ly(x=~cuisine_description, y=~n, type="bar") %>% 
+    layout((title = "Scores Ranking of different cursine"),
+          xaxis = list(title = "Cuisine Type"),
+          yaxis = list(title = "Inspection Scores"))
 ```
 

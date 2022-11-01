@@ -11,25 +11,14 @@ output:
 ![](https://media.giphy.com/media/drXGoW1iudhKw/giphy.gif)
 
 
-Here's some text. I like the internet. I use [google](https://www.google.com/) all the time to do data science. 
+I am the first year student studying biostatistics in Columbia University. My track is public health data science. I come from China and currently lived in Manhattan. I like the internet. I use [google](https://www.google.com/) all the time to do data science. 
 
-This is my cat candy, who likes to be on the internet. ![](image/cat.jpg)
 
-<center>
-<img src="image/cat.jpg" style="width:25%">
-</center>
-
-```{r}
-library(tidyverse)
-
-sample = rnorm(1000)
-mean(sample)
-```
 
 Here's a direct link to the about page: [about](about.html)
 
-I also made a bonus [extra page](extra_page.html)
+I also made a bonus page about my experience [experience](experience.html)
 
 ## New section!!
 
-[Here's](plotly.html) a page with plotly plots
+[Here's](plotly.html) a page with plotly plots in class
