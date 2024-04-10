@@ -21,6 +21,6 @@ Additionally, the site delves into the New York City Airbnb market, presenting d
 
 ![](image/nyc.webp)
 
-In summary, Wenjun's awesome website is more than just a showcase of data visualization skills. It's an interactive platform that combines rigorous data science with a clear and accessible narrative, reflecting Wenjun's passion for public health, data analysis, and community service.
+In summary, Wenjun's awesome website is more than just a showcase of data visualization skills. It's an interactive platform that combines rigorous data science with a clear and accessible narrative, reflecting Wenjun's passion for public health, data analysis, and community service. My favorite part of the website will be visualization and dashboard!!
 
 ![](image/website.png)
