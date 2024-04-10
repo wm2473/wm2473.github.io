@@ -11,7 +11,9 @@ output:
 ![](https://media.giphy.com/media/drXGoW1iudhKw/giphy.gif)
 
 
-I am the first year student studying biostatistics in Columbia University. My track is public health data science. I come from China and currently lived in Manhattan. I like the internet. I use [google](https://www.google.com/) all the time to do data science. 
+I am currently a second year student studying Biostatistics in Columbia University. My track is public health data science. I come from China and currently lived in Manhattan.
+![](image/me.jpeg)
+I like all the outdoor activities. I use [google](https://www.google.com/) all the time to do data science. 
 
 
 
@@ -19,6 +21,6 @@ Here's a direct link to the about page: [about](about.html)
 
 I also made a bonus page about my experience [experience](experience.html)
 
-## New section!!
+## New Section!
 
-[Here's](plotly.html) a page with plotly plots in class
+[Here's](plotly.html) a page with plotly plots and code in class (Project about the NYC Restaurants)

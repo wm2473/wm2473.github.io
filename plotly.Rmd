@@ -135,4 +135,4 @@ nyc_airbnb %>%
 ggplotly(ggp_scatterplot)
 ```
 
-## Create a dashboard...
+
