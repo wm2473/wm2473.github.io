@@ -6,21 +6,35 @@ output:
     toc_float: true
 ---
 
-# This is Wenjun's awesome website
+# Wenjun's awesome website
 
 ![](https://media.giphy.com/media/drXGoW1iudhKw/giphy.gif)
 
 
 I am currently a second year student studying Biostatistics in Columbia University. My track is public health data science. I come from China and currently lived in Manhattan.
-![](image/me.jpeg)
-I like all the outdoor activities. I use [google](https://www.google.com/) all the time to do data science. 
+<img src = "image/me.jpeg" style = "width:75%">
 
+
+I like all the outdoor activities. I use [google](https://www.google.com/) all the time to do data science. 
 
 
 Here's a direct link to the about page: [about](about.html)
 
+
 I also made a bonus page about my experience [experience](experience.html)
 
-## New Section!
 
-[Here's](plotly.html) a page with plotly plots and code in class (Project about the NYC Restaurants)
+
+# New Section!
+
+## Visualization 
+[Here's](plotly.html) a page with plotly plots and code in class (Project about the NYC Restaurants) 
+![](image/ruby.webp)
+
+## Pokemon Fun Fact
+[FUN](Machine_learning.html) Fact some fun fact about the pokemon statistics
+![](image/pokemon.png)
+
+## Child care inspection project
+One of the data science project corporate with my amazing teammates [Project](https://pl2848.github.io/final_project.github.io/)
+![](image/childcare.jpeg)

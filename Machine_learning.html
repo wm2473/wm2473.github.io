@@ -11,7 +11,7 @@
 
 
 
-<title>About this website</title>
+<title>Pokemon Statistics</title>
 
 <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -356,42 +356,132 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">About this website</h1>
+<h1 class="title toc-ignore">Pokemon Statistics</h1>
 
 </div>
 
 
-<div id="this-is-wenjuns-awesome-website" class="section level1">
-<h1>This is Wenjun’s awesome website</h1>
-<p>Welcome to Wenjun’s awesome website, an interactive portal showcasing
-the convergence of data analytics, visualization, and public health
-insights. This site is built using R Markdown and is powered by R Shiny,
-providing a dynamic and user-friendly interface for exploring complex
-data sets.</p>
-<p>The website features advanced data visualizations created with
-Plotly, an open-source graphing library that enables interactive,
-publication-quality graphs online. Wenjun utilizes Plotly to transform
-static data from New York City’s public datasets into engaging and
-informative visual narratives.</p>
-<p><img src="image/plotly.webp" /></p>
-<p>Visitors can explore a range of visualizations, including scatter
-plots highlighting restaurant health inspection scores across Manhattan
-and box plots comparing the scores by borough. Through these
-visualizations, the site provides a unique perspective on public health
-and safety standards in the food industry across different
-neighborhoods.</p>
-<p>Additionally, the site delves into the New York City Airbnb market,
-presenting data on rental prices, types, and ratings in a visually
-compelling format. Scatter plots reveal the geographical distribution of
-rental prices, while box plots and bar graphs offer insights into the
-pricing trends and popularity of different neighborhoods.</p>
-<p><img src="image/nyc.webp" /></p>
-<p>In summary, Wenjun’s awesome website is more than just a showcase of
-data visualization skills. It’s an interactive platform that combines
-rigorous data science with a clear and accessible narrative, reflecting
-Wenjun’s passion for public health, data analysis, and community
-service.</p>
-<p><img src="image/website.png" /></p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.2.3</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.2.3</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(glmnet)</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## Warning: package &#39;Matrix&#39; was built under R version 4.2.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Matrix&#39;
+## 
+## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack
+## 
+## Loaded glmnet 4.1-8</code></pre>
+<pre class="r"><code>set.seed(11)</code></pre>
+<pre class="r"><code>bwt_df = 
+  read_csv(&quot;./birthweight.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;%
+  mutate(
+    babysex = as.factor(babysex),
+    babysex = fct_recode(babysex, &quot;male&quot; = &quot;1&quot;, &quot;female&quot; = &quot;2&quot;),
+    frace = as.factor(frace),
+    frace = fct_recode(frace, &quot;white&quot; = &quot;1&quot;, &quot;black&quot; = &quot;2&quot;, &quot;asian&quot; = &quot;3&quot;, 
+                       &quot;puerto rican&quot; = &quot;4&quot;, &quot;other&quot; = &quot;8&quot;),
+    malform = as.logical(malform),
+    mrace = as.factor(mrace),
+    mrace = fct_recode(mrace, &quot;white&quot; = &quot;1&quot;, &quot;black&quot; = &quot;2&quot;, &quot;asian&quot; = &quot;3&quot;, 
+                       &quot;puerto rican&quot; = &quot;4&quot;)) %&gt;% 
+  sample_n(200)</code></pre>
+<pre><code>## Rows: 4342 Columns: 20
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (20): babysex, bhead, blength, bwt, delwt, fincome, frace, gaweeks, malf...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Inputs fir “glmnet”</p>
+<pre class="r"><code>x = model.matrix(bwt ~ ., bwt_df)[,-1]#[,-1] no intercept
+y = bwt_df$bwt</code></pre>
+<p>Fit Lasso!</p>
+<pre class="r"><code>lambda = 10^(seq(3, -2, -0.1)) # illustare how lasso work
+
+lasso_fit =
+  glmnet(x, y, lambda = lambda)
+
+lasso_cv =
+  cv.glmnet(x, y, lambda = lambda) # best lamda 
+
+lambda_opt = lasso_cv$lambda.min</code></pre>
+<p>This is the plot for lasso</p>
+<pre class="r"><code>broom::tidy(lasso_fit) %&gt;% 
+  select(term, lambda, estimate) %&gt;% 
+  complete(term, lambda, fill = list(estimate = 0) ) %&gt;% 
+  filter(term != &quot;(Intercept)&quot;) %&gt;% 
+  ggplot(aes(x = log(lambda, 10), y = estimate, group = term, color = term)) + 
+  geom_path() + 
+  geom_vline(xintercept = log(lambda_opt, 10), color = &quot;blue&quot;, size = 1.2) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="Machine_learning_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>broom::tidy(lasso_cv) %&gt;% 
+  ggplot(aes(x = log(lambda, 10), y = estimate)) + 
+  geom_point() </code></pre>
+<p><img src="Machine_learning_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div id="clustering" class="section level1">
+<h1>Clustering</h1>
+<pre class="r"><code>poke_df = 
+  read_csv(&quot;./pokemon.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  select(hp, speed)</code></pre>
+<pre><code>## Rows: 800 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (3): Name, Type 1, Type 2
+## dbl (9): #, Total, HP, Attack, Defense, Sp. Atk, Sp. Def, Speed, Generation
+## lgl (1): Legendary
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>poke_df %&gt;% 
+  ggplot(aes(x = hp, y = speed)) + 
+  geom_point()</code></pre>
+<p><img src="Machine_learning_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+Run K means</p>
+<pre class="r"><code>kmeans_fit =
+  kmeans(x = poke_df, centers = 3) # run cluster and want 3 clusters</code></pre>
+<pre class="r"><code>poke_df =
+  broom::augment(kmeans_fit, poke_df) # give me cluster mean, imorted cluste to my original dataset
+
+poke_df %&gt;% 
+  ggplot(aes(x = hp, y = speed, color = .cluster)) +
+  geom_point()</code></pre>
+<p><img src="Machine_learning_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>clusts =
+  tibble(k = 2:4) %&gt;%
+  mutate(
+    km_fit =    map(k, ~kmeans(poke_df, .x)),
+    augmented = map(km_fit, ~broom::augment(.x, poke_df))
+  )
+
+clusts %&gt;% 
+  select(-km_fit) %&gt;% 
+  unnest(augmented) %&gt;% 
+  ggplot(aes(hp, speed, color = .cluster)) +
+  geom_point(aes(color = .cluster)) +
+  facet_grid(~k)</code></pre>
+<p><img src="Machine_learning_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 
 

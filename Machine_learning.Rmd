@@ -1,0 +1,114 @@
+---
+title: "Pokemon Statistics"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+
+```{r}
+library(tidyverse)
+library(glmnet)
+set.seed(11)
+```
+
+```{r}
+bwt_df = 
+  read_csv("./birthweight.csv") %>% 
+  janitor::clean_names() %>%
+  mutate(
+    babysex = as.factor(babysex),
+    babysex = fct_recode(babysex, "male" = "1", "female" = "2"),
+    frace = as.factor(frace),
+    frace = fct_recode(frace, "white" = "1", "black" = "2", "asian" = "3", 
+                       "puerto rican" = "4", "other" = "8"),
+    malform = as.logical(malform),
+    mrace = as.factor(mrace),
+    mrace = fct_recode(mrace, "white" = "1", "black" = "2", "asian" = "3", 
+                       "puerto rican" = "4")) %>% 
+  sample_n(200)
+```
+
+Inputs fir "glmnet"
+```{r}
+x = model.matrix(bwt ~ ., bwt_df)[,-1]#[,-1] no intercept
+y = bwt_df$bwt
+```
+
+Fit Lasso!
+```{r}
+lambda = 10^(seq(3, -2, -0.1)) # illustare how lasso work
+
+lasso_fit =
+  glmnet(x, y, lambda = lambda)
+
+lasso_cv =
+  cv.glmnet(x, y, lambda = lambda) # best lamda 
+
+lambda_opt = lasso_cv$lambda.min
+```
+
+This is the plot for lasso
+```{r}
+broom::tidy(lasso_fit) %>% 
+  select(term, lambda, estimate) %>% 
+  complete(term, lambda, fill = list(estimate = 0) ) %>% 
+  filter(term != "(Intercept)") %>% 
+  ggplot(aes(x = log(lambda, 10), y = estimate, group = term, color = term)) + 
+  geom_path() + 
+  geom_vline(xintercept = log(lambda_opt, 10), color = "blue", size = 1.2) +
+  theme(legend.position = "none")
+```
+
+
+```{r}
+broom::tidy(lasso_cv) %>% 
+  ggplot(aes(x = log(lambda, 10), y = estimate)) + 
+  geom_point() 
+```
+
+# Clustering
+```{r}
+poke_df = 
+  read_csv("./pokemon.csv") %>% 
+  janitor::clean_names() %>% 
+  select(hp, speed)
+```
+
+```{r}
+poke_df %>% 
+  ggplot(aes(x = hp, y = speed)) + 
+  geom_point()
+```
+Run K means
+```{r}
+kmeans_fit =
+  kmeans(x = poke_df, centers = 3) # run cluster and want 3 clusters
+```
+
+```{r}
+poke_df =
+  broom::augment(kmeans_fit, poke_df) # give me cluster mean, imorted cluste to my original dataset
+
+poke_df %>% 
+  ggplot(aes(x = hp, y = speed, color = .cluster)) +
+  geom_point()
+```
+
+```{r}
+clusts =
+  tibble(k = 2:4) %>%
+  mutate(
+    km_fit =    map(k, ~kmeans(poke_df, .x)),
+    augmented = map(km_fit, ~broom::augment(.x, poke_df))
+  )
+
+clusts %>% 
+  select(-km_fit) %>% 
+  unnest(augmented) %>% 
+  ggplot(aes(hp, speed, color = .cluster)) +
+  geom_point(aes(color = .cluster)) +
+  facet_grid(~k)
+```
+
